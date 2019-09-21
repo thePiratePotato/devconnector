@@ -12,7 +12,7 @@ const User = require('../../models/User');
 // @desc Register User
 // @access Public
 router.post('/', [
-    check('username', 'username is required!!!').not().isEmpty(),
+    check('name', 'username is required!!!').not().isEmpty(),
     check('email', 'Please include a valid email address').isEmail(),
     check('password', 'Please enter a password with 6 or more characters ').isLength({
         min: 6
@@ -25,12 +25,12 @@ router.post('/', [
         return res.status(400).json({ errors: errors.array() });
     }
 
-    const { username, email, password } = req.body;
+    const { name, email, password } = req.body;
     try {
         // check if the user has already exists????
-        let username = await User.findOne({ email });
-        if (username) {
-            res.status(400).json({ errors: [{ msg: 'User has already exists' }] });
+        let user = await User.findOne({ email });
+        if (user) {
+            return res.status(400).json({ errors: [{ msg: 'User has already exists' }] });
         }
         // get User gravatar
 
@@ -43,7 +43,7 @@ router.post('/', [
         });
         // create an instance of the User
         user = new User({
-            username,
+            name,
             email,
             avatar,
             password
