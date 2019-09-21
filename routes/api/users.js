@@ -1,13 +1,15 @@
 const express = require('express');
 const router = express.Router();
 // use express validator to value every information that the users provide
-const { check, validationResult } = require('express-validator');
+
 // get userGravatar
 const gravatar = require('gravatar');
 // encrypt the password using bcrypt
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const config = require('config');
 const User = require('../../models/User');
-
+const { check, validationResult } = require('express-validator');
 // @route POST api/user
 // @desc Register User
 // @access Public
@@ -63,7 +65,21 @@ router.post('/', [
 
 
         // return webtoken
-        res.send('User registered');
+        // res.send('User registered');
+        // creating payload, an obj
+        const payload = {
+            user: {
+                id: user.id
+            }
+        };
+        jwt.sign(payload,
+            config.get('jwtSecret'), {
+                expiresIn: 360000
+            },
+            (err, token) => {
+                if (err) throw err;
+                res.json({ token });
+            });
     } catch (err) {
         // server error
         console.err(err.message);
