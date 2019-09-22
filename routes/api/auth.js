@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcryptjs');
-const auth = require('../../middleware/auth');
+const authenticate = require('../../middleware/auth');
 const User = require('../../models/User');
 const jwt = require('jsonwebtoken');
 const config = require('config');
@@ -11,7 +11,7 @@ const { check, validationResult } = require('express-validator');
 // @desc Test route
 // @access Public
 // to use middleware, add in the middleware function
-router.get('/', auth, async(req, res) => {
+router.get('/', authenticate, async(req, res) => {
     try {
         const user = await User.findById(req.user.id).select('-password');
         res.json(user);
