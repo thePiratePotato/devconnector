@@ -14,9 +14,9 @@ const { check, validationResult } = require('express-validator');
 // @desc Register User
 // @access Public
 router.post('/', [
-    check('name', 'username is required!!!').not().isEmpty(),
+    check('name', 'username is required').not().isEmpty(),
     check('email', 'Please include a valid email address').isEmail(),
-    check('password', 'Please enter a password with 6 or more characters ').isLength({
+    check('password', 'Please enter a password with 6 or more characters').isLength({
         min: 6
     })
 ], async(req, res) => {
@@ -55,15 +55,11 @@ router.post('/', [
         // 10 rounds looping are recommended for genSalt
         const salt = await bcrypt.genSalt(10);
         // Creating HASHed Password
-        // user created above, parse in the password enter, /// bcrypt.hash(the plain-txt password, salt)
+        // user created above, parse in the password enter, /// 
         user.password = await bcrypt.hash(password, salt);
         // then save the userpassword the database using .save().then()
         // using await is much better, hence there is no need for promise=>>>.then()
         await user.save();
-
-
-
-
         // return webtoken
         // res.send('User registered');
         // creating payload, an obj
@@ -72,9 +68,10 @@ router.post('/', [
                 id: user.id
             }
         };
+
         jwt.sign(payload,
             config.get('jwtSecret'), {
-                expiresIn: 360000
+                expiresIn: 36000
             },
             (err, token) => {
                 if (err) throw err;
@@ -82,13 +79,9 @@ router.post('/', [
             });
     } catch (err) {
         // server error
-        console.err(err.message);
+        console.error(err.message);
         res.status(500).send('Server error');
     }
-
-
-
-
 });
 
 module.exports = router;
