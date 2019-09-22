@@ -105,4 +105,39 @@ router.post('/', [authenticate, [
             res.status(500).send('Server Error');
         }
     });
+// @route  GET request to api /profile
+// @desc     get all profiles
+// @acess    public
+// this is meant to provide a route which displays all users on the profiles
+router.get('/', async(req, res) => {
+    try {
+        const profiles = await Profile.find().populate('user', ['name', 'avatar']);
+        res.json(profiles);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server Error');
+    }
+});
+
+// @route  GET request to api /profile/user/:user_id
+// @desc     get a particular profile by user_id
+// @acess    public
+// this is meant to provide a route which displays all users on the profiles
+router.get('/user/:user_id', async(req, res) => {
+    try {
+        const profile = await Profile.findOne({ ser: req.params.user_id }).populate('user', ['name', 'avatar']);
+
+        // check if there is any user-profile
+        if (!profile)
+            return res.status(400).json({ msg: "Profile not found" });
+    } catch (err) {
+        console.error(err.message);
+        if (err.kind == 'ObjectId') {
+            return res.status(400).json({ msg: "Profile not found" });
+        }
+        res.status(500).send('Server Error');
+    }
+});
+
+
 module.exports = router;
