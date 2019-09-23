@@ -9,7 +9,7 @@ app.use(express.json({ extended: false }));
 
 // define routes on address bar
 app.use('/api/users', require('./routes/api/users'));
-app.use('/api/authentication ', require('./routes/api/auth'));
+app.use('/api/auth ', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/posts', require('./routes/api/posts'));
 
