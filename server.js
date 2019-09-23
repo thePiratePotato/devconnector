@@ -16,12 +16,6 @@ app.use('/api/auth', require('./routes/api/auth'));
 app.use('/api/profile', require('./routes/api/profile'));
 app.use('/api/posts', require('./routes/api/posts'));
 
-app.get('/api/hung', (req, res) => {
-    console.log(req.query);
-    let name = JSON.stringify(req.query.name);
-    res.status(200).end(name + "Hung is here");
-});
-
 
 app.get('/', (req, res) => res.send('API Runnning'));
 const PORT = process.env.PORT || 3000;
